@@ -10,6 +10,23 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+    <style>
+        .search-slide-form {
+            width: 0;
+            overflow: hidden;
+            transition: 0.3s ease-in-out;
+        }
+
+        .search-slide-form.active {
+            width: 180px;
+        }
+
+        .search-input {
+            border-radius: 20px;
+            padding: 4px 10px;
+        }
+    </style>
+
 </head>
 
 <body>
@@ -31,7 +48,20 @@
                     <li class="nav-item"><a class="nav-link" href="{{ route('service') }}">Contact</a></li>
                 </ul>
                 <div class="d-flex align-items-center nav-icons">
-                    <a href="#" class="text-white me-3"><i class="bi bi-search"></i></a>
+                    <!-- Search Toggle Button -->
+                    <a href="#" id="searchToggle" class="text-white me-3">
+                        <i class="bi bi-search"></i>
+                    </a>
+
+                    <!-- Sliding Search Form -->
+                    <form id="searchForm" action="{{ route('products.search') }}" method="GET"
+                        class="d-flex align-items-center search-slide-form">
+                        <input type="text" id="liveSearch" name="q" class="form-control form-control-sm search-input"
+    placeholder="Search..." />
+
+                    </form>
+
+
                     <a href="#" class="text-white me-3"><i class="bi bi-person"></i></a>
                     <a href="{{ route('service') }}" class="btn btn-warning fw-bold">Buy Now</a>
                 </div>
@@ -58,6 +88,58 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('searchToggle').addEventListener('click', function(e) {
+            e.preventDefault();
+            const box = document.getElementById('searchBox');
+            box.style.display = (box.style.display === "none") ? "block" : "none";
+        });
+    </script>
+
+    <script>
+        document.getElementById("searchToggle").addEventListener("click", function(e) {
+            e.preventDefault();
+
+            // Jika bukan di halaman shop → redirect dan beri query search=open
+            if (window.location.pathname !== "{{ route('products') }}") {
+                window.location.href = "{{ route('products') }}?search=open";
+                return;
+            }
+
+            // Jika sudah di halaman shop → slide open/close
+            const form = document.getElementById("searchForm");
+            form.classList.toggle("active");
+
+            if (form.classList.contains("active")) {
+                setTimeout(() => {
+                    form.querySelector(".search-input").focus();
+                }, 200);
+            }
+        });
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const urlParams = new URLSearchParams(window.location.search);
+
+            // Jika datang dari klik ikon search
+            if (urlParams.get('search') === 'open') {
+                const form = document.getElementById("searchForm");
+
+                // Buka slide
+                form.classList.add("active");
+
+                // Fokus input
+                setTimeout(() => {
+                    form.querySelector(".search-input").focus();
+                }, 200);
+            }
+        });
+    </script>
+
+
+
+
 </body>
 
 </html>
