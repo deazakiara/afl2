@@ -8,6 +8,7 @@ use App\Http\Controllers\ServiceController;
 // Home
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/products', [ProductController::class, 'index'])->name('products');
+Route::resource('products', ProductController::class);
 
 //search
 Route::get('/products/search', [ProductController::class, 'search'])->name('products.search');

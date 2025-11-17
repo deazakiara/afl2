@@ -25,11 +25,16 @@ class ProductFactory extends Factory
 
         $name = $this->faker->randomElement($productNames);
 
+
+        $images = ['mushroom.png', 'tulip.png', 'lamp3.png', 'lamp4.png', 'lamp5.jpg'];
+        $imageName = $this->faker->randomElement($images);
+        $imagePath = 'assets/images/' . $imageName;
+
         return [
             'category_id' => \App\Models\Category::inRandomOrder()->first()?->id ?? 1,
             'name' => $name,
-            'slug' => Str::slug($name) . '-' . $this->faker->unique()->numberBetween(1, 999),
-            'image' => 'images/sample-product.jpg',
+            'slug' => $this->faker->unique()->slug,
+            'image' => $imagePath, // path yang sesuai storage
             'price' => $this->faker->numberBetween(50000, 250000),
             'short_description' => $this->faker->randomElement([
                 'A stylish and functional lighting piece for any modern space.',
